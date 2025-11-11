@@ -27,6 +27,7 @@ models = [
     ["gdps", "gem_glb_15km"],
     ["nam", "nam_awphys"],
     ["gfs", "gfs_pgrb2_0p25_f"],
+    ["ecmwf", "ecmwf_ifs"]
 ]
 
 model_for_data = "hrdps_continental"
@@ -216,8 +217,9 @@ def populate_dict_array():
 
         mountain["google_map_link"] = mountain["google_map_link"].replace(" ", "%20")
 
-        mountain["windy_link"] = ("https://www.windy.com/" + mountain["lat"] + "/" + mountain["lon"] + "?" +
-                                  mountain["lat"] + "," + mountain["lon"] + ",11")
+        mountain["ecmwf_link"] = "https://spotwx.com/products/grib_index.php?model=" + get_model_for_data("ecmwf")[
+            1] + "&lat=" + mountain["lat"] + "&lon=" + mountain["lon"] + "&tz=America%2FMontreal&label=" + mountain[
+                                   "name"]
 
         print(mountain["name"] + " done...")
 
