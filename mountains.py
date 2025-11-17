@@ -141,7 +141,7 @@ mountains = [
         "gfs_link": "",
         "google_map_link": "",
         "windy_link": "",
-        "webcam_link": "https://www.montedouard.com/webcams"
+        "webcam_link": "https://www.montedouard.com/fr/cameradirect"
     },
     {
         "name": "Massif de Charlevoix",
