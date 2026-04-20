@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Where to ski next week? Real-time snow conditions and 10-day forecasts for ~54 world-class ski resorts ranked by Ski Score.">
+    <meta name="author" content="Justin Breton">
+    <title>Où Skier? – Global Ski Destination Advisor</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/5.0.3/css/fixedColumns.dataTables.min.css"/>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css"
+          type="text/css">
+
+    <style>
+        body { font-size: 0.9rem; }
+
+        /* Ski score badge colours */
+        .score-excellent { background-color: #198754; color: #fff; }
+        .score-good      { background-color: #0d6efd; color: #fff; }
+        .score-fair      { background-color: #fd7e14; color: #fff; }
+        .score-poor      { background-color: #adb5bd; color: #212529; }
+
+        /* Row highlight matching score */
+        tr.row-excellent { background-color: rgba(25, 135, 84, 0.10) !important; }
+        tr.row-good      { background-color: rgba(13, 110, 253, 0.08) !important; }
+        tr.row-fair      { background-color: rgba(253, 126, 20, 0.08) !important; }
+
+        .badge-score { font-size: 0.95rem; min-width: 3rem; display: inline-block; text-align: center; border-radius: 0.4rem; padding: 0.25em 0.55em; }
+
+        .region-btn.active { box-shadow: 0 0 0 3px #0d6efd55; }
+
+        /* Legend */
+        .legend-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 5px; }
+
+        #world_map { height: 540px; }
+
+        /* Scrollable table wrapper */
+        .table-responsive { overflow-x: auto; }
+    </style>
+</head>
+<body>
+<main role="main" class="container-xl py-4">
+
+    <!-- ── Header ─────────────────────────────────────────────────────────── -->
+    <h1 class="mb-1">⛷️ Où Skier?</h1>
+    <p class="text-muted mb-1">Global ski destination advisor – where should you book your next ski trip?</p>
+    <p class="mb-2">
+        Data: <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a> (free, no API key required) &mdash;
+        built on <a href="https://github.com/bretonjustin/prochaine-tempete" target="_blank">prochaine-tempete</a> by
+        <a href="https://justinbreton.ca/" target="_blank">Justin Breton</a>.
+    </p>
+    <p class="text-muted small mb-3">Last updated: {{ data.last_update }}</p>
+
+    <!-- ── How the score works ───────────────────────────────────────────── -->
+    <div class="alert alert-secondary py-2 mb-3" role="alert">
+        <strong>Ski Score (0–100):</strong>
+        30 % current snow base &nbsp;|&nbsp;
+        40 % next-10-day snowfall forecast &nbsp;|&nbsp;
+        20 % season-to-date total &nbsp;|&nbsp;
+        10 % cold-temperature bonus.
+        &nbsp;
+        <span class="badge-score score-excellent">≥ 65 excellent</span>
+        <span class="badge-score score-good">≥ 35 good</span>
+        <span class="badge-score score-fair">≥ 15 fair</span>
+        <span class="badge-score score-poor">&lt; 15 poor / off-season</span>
+    </div>
+
+    <!-- ── Region filter buttons ─────────────────────────────────────────── -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <button class="btn btn-outline-primary btn-sm region-btn active" data-region-filter="all"
+                onclick="filterRegion(this, 'all')">🌍 All</button>
+        <button class="btn btn-outline-primary btn-sm region-btn" data-region-filter="North America"
+                onclick="filterRegion(this, 'North America')">🍁 North America</button>
+        <button class="btn btn-outline-primary btn-sm region-btn" data-region-filter="Europe"
+                onclick="filterRegion(this, 'Europe')">🏔️ Europe</button>
+        <button class="btn btn-outline-primary btn-sm region-btn" data-region-filter="Japan"
+                onclick="filterRegion(this, 'Japan')">🗻 Japan</button>
+        <button class="btn btn-outline-primary btn-sm region-btn" data-region-filter="Southern Hemisphere"
+                onclick="filterRegion(this, 'Southern Hemisphere')">🌏 Southern Hemisphere</button>
+    </div>
+
+    <!-- ── Main table ────────────────────────────────────────────────────── -->
+    <div class="table-responsive mb-4">
+        <table id="skiTable" class="table table-sm table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Resort</th>
+                <th>Country</th>
+                <th>Subregion</th>
+                <th>Base (cm)</th>
+                <th>Season Total (cm)</th>
+                <th>Next 10d Snow (cm)</th>
+                <th>Min Temp (°C)</th>
+                <th>Avg Temp (°C)</th>
+                <th>Ski Score</th>
+                <th>Model</th>
+                <th>Webcam</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for resort in data.resorts %}
+            {% set score = resort.ski_score | default(0) %}
+            {% if score >= 65 %}
+              {% set row_class = "row-excellent" %}
+              {% set badge_class = "score-excellent" %}
+            {% elif score >= 35 %}
+              {% set row_class = "row-good" %}
+              {% set badge_class = "score-good" %}
+            {% elif score >= 15 %}
+              {% set row_class = "row-fair" %}
+              {% set badge_class = "score-fair" %}
+            {% else %}
+              {% set row_class = "" %}
+              {% set badge_class = "score-poor" %}
+            {% endif %}
+            <tr class="{{ row_class }}" data-region="{{ resort.region }}">
+                <td class="text-muted">{{ loop.index }}</td>
+                <td>
+                    <a href="https://www.google.com/maps?z=12&t=k&q={{ resort.lat }},{{ resort.lon }}"
+                       target="_blank" class="fw-semibold text-decoration-none">{{ resort.name }}</a>
+                    <span class="text-muted small">&nbsp;{{ resort.altitude_m }}m</span>
+                </td>
+                <td>{{ resort.country }}</td>
+                <td>{{ resort.subregion }}</td>
+                <td>{{ resort.snow_base_cm | default(0) }}</td>
+                <td>{{ resort.season_total_cm | default(0) }}</td>
+                <td>{{ resort.next_10_snow_cm | default(0) }}</td>
+                <td>{{ resort.min_10day_temp if resort.min_10day_temp is not none else "–" }}</td>
+                <td>{{ resort.avg_10day_temp if resort.avg_10day_temp is not none else "–" }}</td>
+                <td><span class="badge-score {{ badge_class }}">{{ score }}</span></td>
+                <td><code class="small">{{ resort.get("model", "best_match") }}</code></td>
+                <td>
+                    {% if resort.webcam_link %}
+                    <a href="{{ resort.webcam_link }}" target="_blank"
+                       class="btn btn-sm btn-outline-secondary">Webcam</a>
+                    {% else %}
+                    <span class="text-muted small">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Charts ────────────────────────────────────────────────────────── -->
+    <h4 class="mt-4">10-Day Snowfall Forecast – Top Resorts</h4>
+    <div id="forecast_chart" class="mb-4"></div>
+
+    <h4 class="mt-2">Snow Base Depth – Past 7 Days &amp; 10-Day Forecast</h4>
+    <div id="snow_depth_chart" class="mb-4"></div>
+
+    <!-- ── World map ─────────────────────────────────────────────────────── -->
+    <h4 class="mt-2">World Map</h4>
+    <div class="mb-2 small">
+        <span class="legend-dot" style="background:#145a32;"></span>Excellent (≥65) &nbsp;
+        <span class="legend-dot" style="background:#1a5276;"></span>Good (≥35) &nbsp;
+        <span class="legend-dot" style="background:#935116;"></span>Fair (≥15) &nbsp;
+        <span class="legend-dot" style="background:#797d7f;"></span>Poor / off-season
+    </div>
+    <div id="world_map" class="mb-4 rounded border"></div>
+
+    <!-- ── Footer ────────────────────────────────────────────────────────── -->
+    <footer class="text-muted small py-3 border-top">
+        <p class="mb-1">
+            Weather data: <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a> (open-source, CC BY 4.0).
+            Models used per resort are listed in the table above.
+        </p>
+        <p class="mb-0">
+            Copyright &copy; 2024 Justin Breton &mdash;
+            <a href="https://github.com/bretonjustin/prochaine-tempete" target="_blank">Source code on GitHub</a>
+        </p>
+    </footer>
+
+</main>
+
+<!-- ── JavaScript ─────────────────────────────────────────────────────────── -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.3/js/dataTables.fixedColumns.min.js"></script>
+
+<script>
+    /* ── DataTable init ───────────────────────────────────────────────────── */
+    var table = $('#skiTable').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        order: [[9, 'desc']],   // sort by Ski Score descending
+        scrollX: true,
+        fixedColumns: { left: 2 },
+        columnDefs: [
+            { orderable: false, targets: [0, 11] }  // rank # and webcam not sortable
+        ]
+    });
+
+    /* ── Region filter ────────────────────────────────────────────────────── */
+    var activeRegion = 'all';
+
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        if (activeRegion === 'all') return true;
+        var row = table.row(dataIndex).node();
+        return $(row).data('region') === activeRegion;
+    });
+
+    function filterRegion(btn, region) {
+        activeRegion = region;
+        $('.region-btn').removeClass('active');
+        $(btn).addClass('active');
+        table.draw();
+    }
+</script>
+
+<!-- Highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>{{ forecast_chart_js | safe }}</script>
+<script>{{ snow_depth_chart_js | safe }}</script>
+
+<!-- Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-gesture-handling"></script>
+<script>
+    var map = L.map('world_map', {gestureHandling: true}).setView([30, 10], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    {% for resort in data.resorts %}
+    {% set score = resort.ski_score | default(0) %}
+    {% if score >= 65 %}
+        {% set color = "#145a32" %}
+        {% set radius = 250000 %}
+    {% elif score >= 35 %}
+        {% set color = "#1a5276" %}
+        {% set radius = 175000 %}
+    {% elif score >= 15 %}
+        {% set color = "#935116" %}
+        {% set radius = 120000 %}
+    {% else %}
+        {% set color = "#797d7f" %}
+        {% set radius = 70000 %}
+    {% endif %}
+    L.circle([{{ resort.lat }}, {{ resort.lon }}], {
+        color: '{{ color }}',
+        fillColor: '{{ color }}',
+        fillOpacity: 0.65,
+        radius: {{ radius }}
+    }).bindPopup(
+        '<b>{{ resort.name }}</b><br>' +
+        '{{ resort.country }} &mdash; {{ resort.subregion }}<br>' +
+        'Ski Score: <b>{{ score }}</b><br>' +
+        'Base: {{ resort.snow_base_cm | default(0) }} cm<br>' +
+        'Next 10d snow: {{ resort.next_10_snow_cm | default(0) }} cm<br>' +
+        'Season total: {{ resort.season_total_cm | default(0) }} cm'
+    ).addTo(map);
+    {% endfor %}
+</script>
+
+</body>
+</html>
