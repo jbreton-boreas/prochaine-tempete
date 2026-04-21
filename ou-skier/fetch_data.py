@@ -85,7 +85,9 @@ def _make_client(cache_file: str):
 def _set_forecast_defaults(resort: dict):
     resort.setdefault("snow_base_cm", 0)
     resort.setdefault("next_10_snow_cm", 0.0)
+    resort.setdefault("recent_7day_snow_cm", 0.0)
     resort.setdefault("min_10day_temp", None)
+    resort.setdefault("max_10day_temp", None)
     resort.setdefault("avg_10day_temp", None)
     resort.setdefault("forecast_dates", [])
     resort.setdefault("forecast_daily_snow", [])
@@ -155,7 +157,15 @@ def _process_forecast_response(resort: dict, response, now_utc: datetime, today_
     next_snow = sum(_safe_float(daily_snow_cm[j]) for j in forecast_idx)
     resort["next_10_snow_cm"] = round(next_snow, 1)
 
-    # Min / avg temperature
+    # Recent 7-day snowfall (from past 7 days up to yesterday)
+    recent_idx = [
+        j for j, dt in enumerate(daily_dates)
+        if today_utc - timedelta(days=7) <= dt.date() < today_utc
+    ]
+    recent_snow = sum(_safe_float(daily_snow_cm[j]) for j in recent_idx)
+    resort["recent_7day_snow_cm"] = round(recent_snow, 1)
+
+    # Min / avg / max temperature
     all_temps = []
     for j in forecast_idx:
         if not pd.isna(daily_temp_min[j]):
@@ -163,6 +173,7 @@ def _process_forecast_response(resort: dict, response, now_utc: datetime, today_
         if not pd.isna(daily_temp_max[j]):
             all_temps.append(float(daily_temp_max[j]))
     resort["min_10day_temp"] = round(min(all_temps), 1) if all_temps else None
+    resort["max_10day_temp"] = round(max(all_temps), 1) if all_temps else None
     resort["avg_10day_temp"] = round(sum(all_temps) / len(all_temps), 1) if all_temps else None
 
     # Daily series for chart (next FORECAST_DAYS days)

@@ -50,7 +50,7 @@
     </style>
 </head>
 <body>
-<main role="main" class="container-xl py-4">
+<main role="main" class="w-100 py-4" style="padding-left: 1rem; padding-right: 1rem;">
 
     <!-- ── Header ─────────────────────────────────────────────────────────── -->
     <h1 class="mb-1">⛷️ Où Skier?</h1>
@@ -101,12 +101,15 @@
                 <th>Subregion</th>
                 <th>Base (cm)</th>
                 <th>Season Total (cm)</th>
+                <th>Recent 7d Snow (cm)</th>
                 <th>Next 10d Snow (cm)</th>
                 <th>Min Temp (°C)</th>
+                <th>Max Temp (°C)</th>
                 <th>Avg Temp (°C)</th>
                 <th>Ski Score</th>
                 <th>Model</th>
                 <th>Webcam</th>
+                <th>Windy</th>
             </tr>
             </thead>
             <tbody>
@@ -136,8 +139,10 @@
                 <td>{{ resort.subregion }}</td>
                 <td>{{ resort.snow_base_cm | default(0) }}</td>
                 <td>{{ resort.season_total_cm | default(0) }}</td>
+                <td>{{ resort.recent_7day_snow_cm | default(0) }}</td>
                 <td>{{ resort.next_10_snow_cm | default(0) }}</td>
                 <td>{{ resort.min_10day_temp if resort.min_10day_temp is not none else "–" }}</td>
+                <td>{{ resort.max_10day_temp if resort.max_10day_temp is not none else "–" }}</td>
                 <td>{{ resort.avg_10day_temp if resort.avg_10day_temp is not none else "–" }}</td>
                 <td><span class="badge-score {{ badge_class }}">{{ score }}</span></td>
                 <td><code class="small">{{ resort.get("model", "best_match") }}</code></td>
@@ -149,6 +154,12 @@
                     <span class="text-muted small">—</span>
                     {% endif %}
                 </td>
+                <td>
+                    {% set windy_url = "https://www.windy.com/" ~ resort.lat ~ "/" ~ resort.lon ~ "?" ~ resort.lat ~ "," ~ resort.lon ~ ",10" %}
+                    <a href="{{ windy_url }}" target="_blank"
+                       class="btn btn-sm btn-outline-secondary">Windy</a>
+                </td>
+                <td class="d-none">{{ resort.region }}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -196,33 +207,47 @@
 <script src="https://cdn.datatables.net/fixedcolumns/5.0.3/js/dataTables.fixedColumns.min.js"></script>
 
 <script>
-    /* ── DataTable init ───────────────────────────────────────────────────── */
-    var table = $('#skiTable').DataTable({
-        paging: false,
-        searching: false,
-        info: false,
-        order: [[9, 'desc']],   // sort by Ski Score descending
-        scrollX: true,
-        fixedColumns: { left: 2 },
-        columnDefs: [
-            { orderable: false, targets: [0, 11] }  // rank # and webcam not sortable
-        ]
-    });
-
-    /* ── Region filter ────────────────────────────────────────────────────── */
+    /* ── Region filter setup ──────────────────────────────────────────────── */
     var activeRegion = 'all';
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         if (activeRegion === 'all') return true;
-        var row = table.row(dataIndex).node();
-        return $(row).data('region') === activeRegion;
+        var cell = data[15];
+        var match = cell === activeRegion;
+        if (dataIndex === 0) {
+            console.log('[filter] activeRegion="' + activeRegion + '" | data[15]="' + cell + '" | match=' + match);
+        }
+        return match;
     });
 
+    /* ── DataTable init ───────────────────────────────────────────────────── */
+    var table = $('#skiTable').DataTable({
+        paging: false,
+        searching: true,         // must be true for ext.search callbacks to fire
+        dom: 'rtip',             // omit 'f' to hide the built-in search box
+        info: false,
+        order: [[11, 'desc']],
+        scrollX: true,
+        fixedColumns: { left: 2 },
+        columnDefs: [
+            { orderable: false, targets: [0, 13, 14] },
+            { visible: false, targets: [15] }
+        ]
+    });
+
+    console.log('[init] DataTable ready. Column count=' + table.columns().count());
+    console.log('[init] First row all data:', table.row(0).data());
+    console.log('[init] data[15] of first row="' + table.row(0).data()[15] + '"');
+
     function filterRegion(btn, region) {
+        console.log('[filterRegion] called with region="' + region + '"');
         activeRegion = region;
         $('.region-btn').removeClass('active');
         $(btn).addClass('active');
+        var before = table.rows().count();
         table.draw();
+        var after = table.rows({search: 'applied'}).count();
+        console.log('[filterRegion] rows before draw=' + before + ', visible after draw=' + after);
     }
 </script>
 
@@ -236,42 +261,60 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet-gesture-handling"></script>
 <script>
-    var map = L.map('world_map', {gestureHandling: true}).setView([30, 10], 2);
+    var map = L.map('world_map', {gestureHandling: true}).setView([20, 0], 2);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    var resorts = [
     {% for resort in data.resorts %}
-    {% set score = resort.ski_score | default(0) %}
-    {% if score >= 65 %}
-        {% set color = "#145a32" %}
-        {% set radius = 250000 %}
-    {% elif score >= 35 %}
-        {% set color = "#1a5276" %}
-        {% set radius = 175000 %}
-    {% elif score >= 15 %}
-        {% set color = "#935116" %}
-        {% set radius = 120000 %}
-    {% else %}
-        {% set color = "#797d7f" %}
-        {% set radius = 70000 %}
-    {% endif %}
-    L.circle([{{ resort.lat }}, {{ resort.lon }}], {
-        color: '{{ color }}',
-        fillColor: '{{ color }}',
-        fillOpacity: 0.65,
-        radius: {{ radius }}
-    }).bindPopup(
-        '<b>{{ resort.name }}</b><br>' +
-        '{{ resort.country }} &mdash; {{ resort.subregion }}<br>' +
-        'Ski Score: <b>{{ score }}</b><br>' +
-        'Base: {{ resort.snow_base_cm | default(0) }} cm<br>' +
-        'Next 10d snow: {{ resort.next_10_snow_cm | default(0) }} cm<br>' +
-        'Season total: {{ resort.season_total_cm | default(0) }} cm'
-    ).addTo(map);
+        {
+            name: {{ resort.name | tojson }},
+            country: {{ resort.country | tojson }},
+            subregion: {{ resort.subregion | tojson }},
+            lat: {{ resort.lat }},
+            lon: {{ resort.lon }},
+            score: {{ resort.ski_score | default(0) }},
+            base: {{ resort.snow_base_cm | default(0) }},
+            next_10d: {{ resort.next_10_snow_cm | default(0) }},
+            season: {{ resort.season_total_cm | default(0) }}
+        }{{ "," if not loop.last else "" }}
     {% endfor %}
+    ];
+
+    resorts.forEach(function(resort) {
+        var score = resort.score;
+        var color, radius;
+        if (score >= 65) {
+            color = "#145a32";
+            radius = 250000;
+        } else if (score >= 35) {
+            color = "#1a5276";
+            radius = 175000;
+        } else if (score >= 15) {
+            color = "#935116";
+            radius = 120000;
+        } else {
+            color = "#797d7f";
+            radius = 70000;
+        }
+
+        var popup = '<b>' + resort.name + '</b><br>' +
+                    resort.country + ' &mdash; ' + resort.subregion + '<br>' +
+                    'Ski Score: <b>' + resort.score + '</b><br>' +
+                    'Base: ' + resort.base + ' cm<br>' +
+                    'Next 10d snow: ' + resort.next_10d + ' cm<br>' +
+                    'Season total: ' + resort.season + ' cm';
+
+        L.circle([resort.lat, resort.lon], {
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.65,
+            radius: radius
+        }).bindPopup(popup).addTo(map);
+    });
 </script>
 
 </body>

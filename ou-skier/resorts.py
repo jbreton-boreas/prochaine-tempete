@@ -35,7 +35,7 @@ resorts = [
         "lon": -122.9574,
         "timezone": "America/Vancouver",
         "altitude_m": 2182,
-        "model": "gem_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/mountain-cams.aspx",
     },
     {
@@ -47,7 +47,7 @@ resorts = [
         "lon": -116.1772,
         "timezone": "America/Edmonton",
         "altitude_m": 2637,
-        "model": "gem_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.skilouise.com/mountain-info/webcams/",
     },
     {
@@ -59,7 +59,7 @@ resorts = [
         "lon": -118.9374,
         "timezone": "America/Vancouver",
         "altitude_m": 2319,
-        "model": "gem_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.bigwhite.com/mountain-info/webcams",
     },
     {
@@ -71,7 +71,7 @@ resorts = [
         "lon": -74.5566,
         "timezone": "America/Toronto",
         "altitude_m": 875,
-        "model": "gem_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.tremblant.ca/mountain-village/webcams",
     },
     {
@@ -83,7 +83,7 @@ resorts = [
         "lon": -115.7500,
         "timezone": "America/Edmonton",
         "altitude_m": 2730,
-        "model": "gem_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.skibanff.com/mountain-info/webcams/",
     },
     {
@@ -95,7 +95,7 @@ resorts = [
         "lon": -118.1658,
         "timezone": "America/Vancouver",
         "altitude_m": 1938,
-        "model": "gem_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.revelstokemountainresort.com/mountain/webcams",
     },
 
@@ -109,7 +109,7 @@ resorts = [
         "lon": -106.3781,
         "timezone": "America/Denver",
         "altitude_m": 3527,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.vail.com/the-mountain/mountain-conditions/web-cams.aspx",
     },
     {
@@ -121,7 +121,7 @@ resorts = [
         "lon": -111.5080,
         "timezone": "America/Denver",
         "altitude_m": 3048,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/webcams.aspx",
     },
     {
@@ -133,7 +133,7 @@ resorts = [
         "lon": -110.8279,
         "timezone": "America/Denver",
         "altitude_m": 3185,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.jacksonhole.com/webcams.html",
     },
     {
@@ -145,7 +145,7 @@ resorts = [
         "lon": -119.0326,
         "timezone": "America/Los_Angeles",
         "altitude_m": 3369,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.mammothmountain.com/on-the-mountain/webcams",
     },
     {
@@ -157,7 +157,7 @@ resorts = [
         "lon": -119.9398,
         "timezone": "America/Los_Angeles",
         "altitude_m": 3060,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.skiheavenly.com/the-mountain/mountain-conditions/webcams.aspx",
     },
     {
@@ -169,7 +169,7 @@ resorts = [
         "lon": -106.9489,
         "timezone": "America/Denver",
         "altitude_m": 3813,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.aspensnowmass.com/our-mountains/snowmass/webcams",
     },
     {
@@ -181,7 +181,7 @@ resorts = [
         "lon": -107.8123,
         "timezone": "America/Denver",
         "altitude_m": 4114,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://tellurideskiresort.com/the-mountain/webcams/",
     },
     {
@@ -193,7 +193,7 @@ resorts = [
         "lon": -114.3526,
         "timezone": "America/Boise",
         "altitude_m": 2800,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.sunvalley.com/mountain/webcams",
     },
     {
@@ -205,7 +205,7 @@ resorts = [
         "lon": -72.7875,
         "timezone": "America/New_York",
         "altitude_m": 1339,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.stowe.com/the-mountain/mountain-conditions/webcams.aspx",
     },
     {
@@ -217,7 +217,7 @@ resorts = [
         "lon": -72.7829,
         "timezone": "America/New_York",
         "altitude_m": 1293,
-        "model": "gfs_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.killington.com/mountain/webcams",
     },
 
@@ -231,7 +231,7 @@ resorts = [
         "lon": 6.8694,
         "timezone": "Europe/Paris",
         "altitude_m": 3842,
-        "model": "meteofrance_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.chamonix.com/webcams",
     },
     {
@@ -243,7 +243,7 @@ resorts = [
         "lon": 6.9775,
         "timezone": "Europe/Paris",
         "altitude_m": 2764,
-        "model": "meteofrance_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.valdisere.com/en/ski-area/webcams/",
     },
     {
@@ -255,7 +255,7 @@ resorts = [
         "lon": 6.6340,
         "timezone": "Europe/Paris",
         "altitude_m": 2700,
-        "model": "meteofrance_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.courchevel.com/en/resort/webcams/",
     },
     {
@@ -267,7 +267,7 @@ resorts = [
         "lon": 6.5630,
         "timezone": "Europe/Paris",
         "altitude_m": 2952,
-        "model": "meteofrance_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.meribel.net/en/resort/webcams/",
     },
 
@@ -281,7 +281,7 @@ resorts = [
         "lon": 7.2283,
         "timezone": "Europe/Zurich",
         "altitude_m": 3330,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.verbier.ch/en/webcams/",
     },
     {
@@ -293,7 +293,7 @@ resorts = [
         "lon": 7.7491,
         "timezone": "Europe/Zurich",
         "altitude_m": 3883,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.zermatt.ch/en/Media/Webcams",
     },
     {
@@ -305,7 +305,7 @@ resorts = [
         "lon": 9.8397,
         "timezone": "Europe/Zurich",
         "altitude_m": 2844,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.davos.ch/en/davos-klosters/webcams/",
     },
     {
@@ -317,7 +317,7 @@ resorts = [
         "lon": 8.0411,
         "timezone": "Europe/Zurich",
         "altitude_m": 2971,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.grindelwald.ch/en/webcams.html",
     },
     {
@@ -329,7 +329,7 @@ resorts = [
         "lon": 10.2683,
         "timezone": "Europe/Vienna",
         "altitude_m": 2811,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.stantonamarlberg.com/en/webcams",
     },
     {
@@ -341,7 +341,7 @@ resorts = [
         "lon": 12.3924,
         "timezone": "Europe/Vienna",
         "altitude_m": 1995,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.kitzbuehel.com/en/live-kitzbuehel/webcams/",
     },
     {
@@ -353,7 +353,7 @@ resorts = [
         "lon": 10.2929,
         "timezone": "Europe/Vienna",
         "altitude_m": 2872,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.ischgl.com/en/media-info/webcams",
     },
     {
@@ -365,7 +365,7 @@ resorts = [
         "lon": 11.0000,
         "timezone": "Europe/Vienna",
         "altitude_m": 3340,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.soelden.com/en/webcams/",
     },
     {
@@ -377,7 +377,7 @@ resorts = [
         "lon": 12.1357,
         "timezone": "Europe/Rome",
         "altitude_m": 2930,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.dolomiti.org/en/cortina/webcams/",
     },
     {
@@ -389,7 +389,7 @@ resorts = [
         "lon": 7.6273,
         "timezone": "Europe/Rome",
         "altitude_m": 3500,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.cervinia.it/en/webcams/",
     },
 
@@ -403,7 +403,7 @@ resorts = [
         "lon": 13.0818,
         "timezone": "Europe/Stockholm",
         "altitude_m": 1420,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.skistar.com/en/our-destinations/are/webcams/",
     },
     {
@@ -415,7 +415,7 @@ resorts = [
         "lon": 12.2682,
         "timezone": "Europe/Oslo",
         "altitude_m": 1132,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.trysil.com/en/webcams/",
     },
     {
@@ -427,7 +427,7 @@ resorts = [
         "lon": 29.1540,
         "timezone": "Europe/Helsinki",
         "altitude_m": 492,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.ruka.fi/en/webcams",
     },
     {
@@ -439,7 +439,7 @@ resorts = [
         "lon": 8.2167,
         "timezone": "Europe/Oslo",
         "altitude_m": 1178,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "",
     },
 
@@ -454,7 +454,7 @@ resorts = [
         "timezone": "Asia/Tbilisi",
         "altitude_m": 3279,
         # ICON covers the Caucasus region well; ecmwf_ifs025 is a valid alternative
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://gudauri.travel/webcam/",
     },
     {
@@ -466,7 +466,7 @@ resorts = [
         "lon": 43.5383,
         "timezone": "Asia/Tbilisi",
         "altitude_m": 1700,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "",
     },
     {
@@ -478,7 +478,7 @@ resorts = [
         "lon": 42.7231,
         "timezone": "Asia/Tbilisi",
         "altitude_m": 2347,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "",
     },
 
@@ -493,7 +493,7 @@ resorts = [
         "timezone": "Europe/Istanbul",
         "altitude_m": 3185,
         # Best model for eastern Turkey: ICON covers the area; ecmwf_ifs025 also good
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.palandoken.com/tr/canli-kamera",
     },
     {
@@ -505,7 +505,7 @@ resorts = [
         "lon": 29.2228,
         "timezone": "Europe/Istanbul",
         "altitude_m": 2543,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.uludag.com.tr/canli-kamera",
     },
     {
@@ -517,7 +517,7 @@ resorts = [
         "lon": 32.0567,
         "timezone": "Europe/Istanbul",
         "altitude_m": 2200,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "",
     },
     {
@@ -529,7 +529,7 @@ resorts = [
         "lon": 42.5667,
         "timezone": "Europe/Istanbul",
         "altitude_m": 2700,
-        "model": "icon_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "",
     },
 
@@ -543,7 +543,7 @@ resorts = [
         "lon": 140.6886,
         "timezone": "Asia/Tokyo",
         "altitude_m": 1308,
-        "model": "jma_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.niseko.ne.jp/en/mountain-info/webcams/",
     },
     {
@@ -555,7 +555,7 @@ resorts = [
         "lon": 137.8602,
         "timezone": "Asia/Tokyo",
         "altitude_m": 2696,
-        "model": "jma_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.hakuba-valley.com/en/webcam/",
     },
     {
@@ -567,7 +567,7 @@ resorts = [
         "lon": 138.4443,
         "timezone": "Asia/Tokyo",
         "altitude_m": 1650,
-        "model": "jma_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.nozawaski.com/en/conditions/webcam/",
     },
     {
@@ -579,7 +579,7 @@ resorts = [
         "lon": 142.3833,
         "timezone": "Asia/Tokyo",
         "altitude_m": 1077,
-        "model": "jma_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.snow.co.jp/en/furano/webcam/",
     },
     {
@@ -591,7 +591,7 @@ resorts = [
         "lon": 138.1667,
         "timezone": "Asia/Tokyo",
         "altitude_m": 1855,
-        "model": "jma_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "",
     },
     {
@@ -603,11 +603,11 @@ resorts = [
         "lon": 138.5208,
         "timezone": "Asia/Tokyo",
         "altitude_m": 2305,
-        "model": "jma_seamless",
+        "model": "ecmwf_ifs025",
         "webcam_link": "https://www.shigakogen-ski.com/en/webcam/",
     },
 
-    # ── Southern Hemisphere ──────────────────────────────────────────────────
+    # # ── Southern Hemisphere ──────────────────────────────────────────────────
     {
         "name": "Portillo",
         "country": "Chile",
@@ -693,4 +693,5 @@ resorts = [
         "model": "ecmwf_ifs025",
         "webcam_link": "https://www.theremarkables.co.nz/webcams",
     },
+
 ]
